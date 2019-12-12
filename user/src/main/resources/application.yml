@@ -1,0 +1,60 @@
+server:
+  tomcat:
+    uri-encoding: UTF-8
+
+spring:
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+  devtools:
+    restart:
+      poll-interval: 4s
+
+  mvc:
+    throw-exception-if-no-handler-found: true
+  resources:
+    add-mappings: false
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/pro_spring?useSSL=true&useUnicode=true&characterEncoding=utf8
+    username: spring
+    password: qZF08fDcidSRJ2CI
+    type: com.alibaba.druid.pool.DruidDataSource
+
+    druid:
+      filters: slf4j
+
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+    password: KSNwJwcOUj2KBLJQ
+    lettuce:
+      pool:
+        max-active: 4
+
+  servlet:
+    multipart:
+      max-request-size: 10MB
+      max-file-size: 10MB
+  main:
+    lazy-initialization: false
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.codve.user.model.data.object
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+token:
+  expire: 300s
+  secret: 123456
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.codve.user.dao.UserMapper">
+    <resultMap id="userMap" type="UserDO">
+        <id column="user_id" property="id" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <result column="user_name" property="name" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result column="user_password" property="password" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result column="user_type" property="type" javaType="java.lang.Integer"  jdbcType="TINYINT"/>
+        <result column="user_birthday" property="birthday" javaType="java.lang.Long" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="fields">
+        user_id, user_name, user_password, user_type, user_birthday
+    </sql>
+
+    <insert id="save" parameterType="UserDO" useGeneratedKeys="true" keyProperty="id">
+        insert into user (
+        <trim suffixOverrides=",">
+            <if test="name != null">user_name,</if>
+            <if test="password != null">user_password,</if>
+            <if test="type != null">user_type,</if>
+            <if test="birthday != null">user_birthday,</if>
+        </trim>)
+        values (
+        <trim suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="password != null">#{password},</if>
+            <if test="type != null">#{type},</if>
+            <if test="birthday != null">#{birthday},</if>
+        </trim>)
+    </insert>
+
+    <update id="update" parameterType="UserDO">
+        update user set
+            <if test="name != null">user_name = #{name},</if>
+            <if test="password != null">user_password = #{password},</if>
+            <if test="type != null">user_type = #{type},</if>
+            <if test="birthday != null">user_birthday = #{birthday},</if>
+            user_id = #{id}
+        where user_id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="Long">
+        delete from user where user_id = #{id}
+    </delete>
+
+    <select id="findById" parameterType="Long" resultMap="userMap">
+        select <include refid="fields"/> from user where user_id = #{id}
+    </select>
+
+    <select id="findByName" parameterType="String" resultMap="userMap">
+        select <include refid="fields"/> from user where user_name = #{name}
+        order by user_id asc limit 1
+    </select>
+
+
+    <select id="find" parameterType="com.codve.user.model.query.UserQuery" resultMap="userMap">
+        SELECT <include refid="fields"/> FROM user
+        <where>
+            <if test="name != null"> and user_name like concat('%', #{name}, '%')</if>
+            <if test="start != null">and user_birthday &gt;= #{start}</if>
+            <if test="end != null">and user_birthday &lt;=  #{end}</if>
+            <if test="userIds != null and userIds.size > 0">and user_id in
+                <foreach collection="userIds" open="(" close=")" separator=", " item="id">
+                  #{id}
+                </foreach>
+            </if>
+        </where>
+        <if test="orderBy != null">
+            <choose>
+                <when test="orderBy == 1"> order by user_id asc</when>
+                <when test="orderBy == 2"> order by user_id desc</when>
+                <when test="orderBy == 3"> order by user_birthday asc</when>
+                <when test="orderBy == 4"> order by user_birthday desc</when>
+            </choose>
+        </if>
+    </select>
+
+    <select id="count" parameterType="com.codve.user.model.query.UserQuery" resultType="Integer">
+        SELECT count(1) FROM user
+        <where>
+            <if test="name != null"> and user_name like concat('%', #{name}, '%')</if>
+            <if test="start != null">and user_birthday &gt;= #{start}</if>
+            <if test="end != null">and user_birthday &lt;=  #{end}</if>
+            <if test="userIds != null and userIds.size > 0">and user_id in
+                <foreach collection="userIds" open="(" close=")" separator=", " item="id">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+</mapper>
