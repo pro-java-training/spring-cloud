@@ -1,6 +1,10 @@
 package com.codve.article.controller;
 
+import com.codve.article.client.UserClient;
+import com.codve.article.model.query.UserQuery;
 import com.codve.article.util.CommonResult;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
@@ -11,9 +15,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.springframework.http.HttpMethod.POST;
 
@@ -30,6 +36,9 @@ public class UserController {
 
     @Autowired
     private LoadBalancerClient client;
+
+    @Autowired
+    private UserClient userClient;
 
     @GetMapping("/auth")
     public String auth() {
@@ -52,6 +61,38 @@ public class UserController {
         ServiceInstance instance = client.choose("user-server");
         String info = instance.getServiceId() + " " + instance.getHost() + ":" + instance.getPort();
         return CommonResult.success(info);
+    }
+
+    @PostMapping("/user/save")
+    public String save(@RequestParam(name = "name") String name, @RequestParam(name="password") String password) {
+        return userClient.save(name, password);
+    }
+
+    @PostMapping("/user/save2")
+    public String save2(@RequestBody UserQuery query) {
+        log.warn(query.toString());
+        return userClient.save2(query);
+    }
+
+    @GetMapping("/user/info")
+    public String findByToken(@RequestHeader("Authorization") String token) {
+        return userClient.info(token);
+    }
+
+    @HystrixCommand(fallbackMethod="authFallback", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000"),
+            @HystrixProperty(name = "metrics.rollingStats.timeInMilliseconds", value = "10000")},
+            threadPoolProperties = {
+                @HystrixProperty(name = "coreSize", value = "3"),
+                @HystrixProperty(name = "maxQueueSize", value = "10")
+            })
+    @PostMapping("/user/auth")
+    public String auth(@RequestParam("name") String name, @RequestParam("password") String password) {
+        return userClient.auth(name, password);
+    }
+
+    public String authFallback(@RequestParam("name") String name, @RequestParam("password") String password) {
+        return "暂时无法获取授权";
     }
 
 }

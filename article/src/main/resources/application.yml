@@ -23,10 +23,14 @@ eureka:
     metadata-map:
       profile: "CMS 服务"
 
-user-server:
-  ribbon:
-    listOfServers: http://localhost:8000, http://localhost:8002
-    MaxAutoRetriesNextServer: 0
-    MaxAutoRetries: 0
-    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RoundRobinRule
-    NIWSServerListClassName: com.netflix.loadbalancer.ConfigurationBasedServerList
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    defaults:
+      enabled: false

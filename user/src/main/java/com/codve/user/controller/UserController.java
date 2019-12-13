@@ -4,6 +4,7 @@ import com.codve.user.annotation.Admin;
 import com.codve.user.annotation.User;
 import com.codve.user.convert.UserConvert;
 import com.codve.user.exception.EX;
+import com.codve.user.model.auth.AuthUser;
 import com.codve.user.model.auth.UserType;
 import com.codve.user.model.data.object.UserDO;
 import com.codve.user.model.query.UserCreateQuery;
@@ -14,6 +15,7 @@ import com.codve.user.service.UserService;
 import com.codve.user.util.CommonResult;
 import com.codve.user.util.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -74,6 +76,14 @@ public class UserController {
     @GetMapping("/{id}")
     public CommonResult<UserVO> findById(@PathVariable("id") @Valid @Min(value = 1) Long id) {
         UserDO user = userService.findById(id);
+        return CommonResult.success(UserConvert.convert(user));
+    }
+
+    @User
+    @GetMapping("/info")
+    public CommonResult<UserVO> info() {
+        AuthUser authUser = (AuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDO user = userService.findById(authUser.getId());
         return CommonResult.success(UserConvert.convert(user));
     }
 
