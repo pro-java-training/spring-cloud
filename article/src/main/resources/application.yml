@@ -1,0 +1,28 @@
+server:
+  port: 8100
+
+spring:
+  application:
+    name: article-server
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/pro_spring?useSSL=true&useUnicode=true&characterEncoding=utf8
+    username: spring
+    password: qZF08fDcidSRJ2CI
+    type: com.alibaba.druid.pool.DruidDataSource
+
+    druid:
+      filters: slf4j
+
+eureka:
+  client:
+    service-url:
+      default-zone: http://localhost:8761/eureka
+  instance:
+    prefer-ip-address: true
+    metadata-map:
+      profile: "CMS 服务"
+
+#user-service:
+#  ribbon:
+#    NFLoadBalancerRuleClassName: com.codve.article.rule.First
