@@ -1,8 +1,9 @@
 package com.codve.article.rule;
 
-import com.netflix.client.config.IClientConfig;
-import com.netflix.loadbalancer.AbstractLoadBalancerRule;
+import com.netflix.loadbalancer.ILoadBalancer;
+import com.netflix.loadbalancer.IRule;
 import com.netflix.loadbalancer.Server;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
@@ -10,19 +11,28 @@ import java.util.List;
  * @author admin
  * @date 2019/12/13 09:34
  */
-public class First extends AbstractLoadBalancerRule {
+@Slf4j
+public class First implements IRule {
 
-    @Override
-    public void initWithNiwsConfig(IClientConfig iClientConfig) {
-
-    }
+    private ILoadBalancer loadBalancer;
 
     @Override
     public Server choose(Object o) {
-        List<Server> servers = getLoadBalancer().getReachableServers();
+        List<Server> servers = loadBalancer.getReachableServers();
+        servers.forEach(e -> System.out.println(e.getPort()));
         if (servers != null && servers.size() > 0) {
             return servers.get(0);
         }
         return null;
+    }
+
+    @Override
+    public void setLoadBalancer(ILoadBalancer iLoadBalancer) {
+        loadBalancer = iLoadBalancer;
+    }
+
+    @Override
+    public ILoadBalancer getLoadBalancer() {
+        return loadBalancer;
     }
 }

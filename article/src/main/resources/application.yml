@@ -34,3 +34,7 @@ management:
   health:
     defaults:
       enabled: false
+
+user-server:
+  ribbon:
+    NFLoadBalancerRuleClassName: com.codve.article.rule.First
