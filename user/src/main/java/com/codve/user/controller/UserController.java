@@ -17,7 +17,6 @@ import com.codve.user.util.PageResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
@@ -46,8 +45,8 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/save")
     @ApiOperation("注册")
+    @PostMapping("/save")
     public CommonResult save(@Validated UserCreateQuery user) {
         UserDO userDO = UserConvert.convert(user);
         userDO.setType(UserType.USER.getType());
@@ -56,8 +55,8 @@ public class UserController {
     }
 
     @Admin
-    @PostMapping("/save/admin")
     @ApiOperation("添加管理员")
+    @PostMapping("/save/admin")
     public CommonResult saveAdmin(@Validated UserCreateQuery user) {
         UserDO userDO = UserConvert.convert(user);
         userDO.setType(UserType.ADMIN.getType());
@@ -83,26 +82,26 @@ public class UserController {
     }
 
     @User
-    @GetMapping("/{id}")
     @ApiOperation("根据 id 查找")
     @ApiImplicitParam(name = "id", value = "用户编号", example = "1")
+    @GetMapping("/{id}")
     public CommonResult<UserVO> findById(@PathVariable("id") @Valid @Min(value = 1) Long id) {
         UserDO user = userService.findById(id);
         return CommonResult.success(UserConvert.convert(user));
     }
 
     @User
-    @GetMapping("/info")
     @ApiOperation("用户详情")
     @ApiImplicitParam(name = "Authorization", value = "token", paramType = "header")
+    @GetMapping("/info")
     public CommonResult<UserVO> info() {
         AuthUser authUser = (AuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDO user = userService.findById(authUser.getId());
         return CommonResult.success(UserConvert.convert(user));
     }
 
-    @PostMapping("/find")
     @ApiOperation("根据条件搜索")
+    @PostMapping("/find")
     public CommonResult<PageResult<UserVO>> find(@RequestBody @Validated UserQuery query) {
         List<UserDO> userDoList = userService.find(query);
         if (userDoList.size() == 0) {

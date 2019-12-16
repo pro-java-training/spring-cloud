@@ -27,8 +27,8 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping("/auth")
     @ApiOperation("获取token")
+    @PostMapping("/auth")
     public CommonResult<String> auth2(HttpServletRequest request, @Validated UserLoginQuery query) {
         String token = authService.passwordAuth(request, query);
         return CommonResult.success(token);

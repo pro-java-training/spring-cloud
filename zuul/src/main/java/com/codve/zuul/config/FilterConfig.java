@@ -1,6 +1,6 @@
 package com.codve.zuul.config;
 
-import com.codve.zuul.filter.AuthFilter;
+import com.codve.zuul.filter.LimitFilter;
 import com.netflix.zuul.ZuulFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,8 +11,13 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class FilterConfig {
+//    @Bean
+//    public ZuulFilter filter() {
+//        return new AuthFilter();
+//    }
+
     @Bean
-    public ZuulFilter filter() {
-        return new AuthFilter();
+    public ZuulFilter limitFilter() {
+        return new LimitFilter();
     }
 }
