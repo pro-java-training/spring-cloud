@@ -2,7 +2,6 @@ package com.codve.zuul.fallback;
 
 import com.google.common.base.Charsets;
 import com.netflix.zuul.context.RequestContext;
-import org.bouncycastle.asn1.ocsp.ResponseData;
 import org.springframework.cloud.netflix.zuul.filters.route.FallbackProvider;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

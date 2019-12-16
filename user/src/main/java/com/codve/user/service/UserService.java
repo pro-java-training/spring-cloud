@@ -2,6 +2,7 @@ package com.codve.user.service;
 
 import com.codve.user.model.data.object.UserDO;
 import com.codve.user.model.query.UserQuery;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public interface UserService {
      * @param userDO userDO
      * @return int
      */
+    @ApiOperation("添加用户")
     int save(UserDO userDO);
 
     /**

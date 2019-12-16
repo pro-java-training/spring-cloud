@@ -16,8 +16,8 @@ spring:
 
   mvc:
     throw-exception-if-no-handler-found: true
-  resources:
-    add-mappings: false
+#  resources:
+#    add-mappings: false
 
   datasource:
     url: jdbc:mysql://localhost:3306/pro_spring?useSSL=true&useUnicode=true&characterEncoding=utf8

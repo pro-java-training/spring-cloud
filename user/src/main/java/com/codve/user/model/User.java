@@ -2,6 +2,8 @@ package com.codve.user.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -12,10 +14,12 @@ import javax.validation.constraints.Size;
  * @author admin
  * @date 2019/11/13 16:10
  */
+@ApiModel(description = "用户实体")
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
 
+    @ApiModelProperty("用户编号")
     @Positive(message = "用户编号必须大于 0")
     private Long id;
 

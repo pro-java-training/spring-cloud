@@ -14,6 +14,10 @@ import com.codve.user.model.vo.UserVO;
 import com.codve.user.service.UserService;
 import com.codve.user.util.CommonResult;
 import com.codve.user.util.PageResult;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
@@ -32,6 +36,7 @@ import static com.codve.user.util.ExceptionUtil.exception;
 @RestController
 @RequestMapping(value = "/user")
 @Validated
+@Api(tags = "用户接口")
 public class UserController {
 
     private UserService userService;
@@ -42,6 +47,7 @@ public class UserController {
     }
 
     @PostMapping("/save")
+    @ApiOperation("注册")
     public CommonResult save(@Validated UserCreateQuery user) {
         UserDO userDO = UserConvert.convert(user);
         userDO.setType(UserType.USER.getType());
@@ -51,6 +57,7 @@ public class UserController {
 
     @Admin
     @PostMapping("/save/admin")
+    @ApiOperation("添加管理员")
     public CommonResult saveAdmin(@Validated UserCreateQuery user) {
         UserDO userDO = UserConvert.convert(user);
         userDO.setType(UserType.ADMIN.getType());
@@ -59,6 +66,8 @@ public class UserController {
     }
 
     @Admin
+    @ApiOperation("删除")
+    @ApiImplicitParam(name = "id", value = "用户编号", example = "1")
     @GetMapping("/delete/{id}")
     public CommonResult delete(@PathVariable @Valid @Min(value = 1) Long id) {
         userService.deleteById(id);
@@ -66,6 +75,7 @@ public class UserController {
     }
 
     @User
+    @ApiOperation("更新")
     @PostMapping("/update")
     public CommonResult update(@Validated UserUpdateQuery updateQuery) {
         userService.update(UserConvert.convert(updateQuery));
@@ -74,6 +84,8 @@ public class UserController {
 
     @User
     @GetMapping("/{id}")
+    @ApiOperation("根据 id 查找")
+    @ApiImplicitParam(name = "id", value = "用户编号", example = "1")
     public CommonResult<UserVO> findById(@PathVariable("id") @Valid @Min(value = 1) Long id) {
         UserDO user = userService.findById(id);
         return CommonResult.success(UserConvert.convert(user));
@@ -81,6 +93,8 @@ public class UserController {
 
     @User
     @GetMapping("/info")
+    @ApiOperation("用户详情")
+    @ApiImplicitParam(name = "Authorization", value = "token", paramType = "header")
     public CommonResult<UserVO> info() {
         AuthUser authUser = (AuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDO user = userService.findById(authUser.getId());
@@ -88,6 +102,7 @@ public class UserController {
     }
 
     @PostMapping("/find")
+    @ApiOperation("根据条件搜索")
     public CommonResult<PageResult<UserVO>> find(@RequestBody @Validated UserQuery query) {
         List<UserDO> userDoList = userService.find(query);
         if (userDoList.size() == 0) {
