@@ -1,5 +1,6 @@
 package com.codve.article.client;
 
+import com.codve.article.config.FeignConfig;
 import com.codve.article.model.query.UserQuery;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +11,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
  * @author admin
  * @date 2019/12/13 13:44
  */
-@FeignClient(name = "user-server")
+@FeignClient(name = "user-server", configuration = FeignConfig.class)
 public interface UserClient {
 
     @PostMapping(value = "/user/save")

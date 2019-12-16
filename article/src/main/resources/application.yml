@@ -38,3 +38,7 @@ management:
 user-server:
   ribbon:
     NFLoadBalancerRuleClassName: com.codve.article.rule.First
+ribbon:
+  eager-load:
+    enabled: true
+    clients: user-server

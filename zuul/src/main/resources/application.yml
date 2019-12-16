@@ -18,3 +18,13 @@ management:
     web:
       exposure:
         include: "*"
+zuul:
+  retryable: true
+
+ribbon:
+  ConnectTimeout: 1000
+  ReadTimeout: 3000
+  MaxAutoRetries: 1
+  MaxAutoRetriesNextServer: 3
+  
+
