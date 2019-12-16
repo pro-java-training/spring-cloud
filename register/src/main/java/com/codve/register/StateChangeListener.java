@@ -13,8 +13,13 @@ import org.springframework.context.event.EventListener;
 public class StateChangeListener {
 
     @EventListener
-    public void listen(EurekaInstanceCanceledEvent event) {
-        log.warn(event.getServerId() + " " + event.getAppName() + " 下线了.");
+    public void listen(EurekaServerStartedEvent event) {
+        log.warn("注册中心启动了.");
+    }
+
+    @EventListener
+    public void listen(EurekaRegistryAvailableEvent event) {
+        log.warn("注册中心可用了.");
     }
 
     @EventListener
@@ -29,12 +34,7 @@ public class StateChangeListener {
     }
 
     @EventListener
-    public void listen(EurekaRegistryAvailableEvent event) {
-        log.warn("注册中心可用了.");
-    }
-
-    @EventListener
-    public void listen(EurekaServerStartedEvent event) {
-        log.warn("注册中心启动了.");
+    public void listen(EurekaInstanceCanceledEvent event) {
+        log.warn(event.getServerId() + " " + event.getAppName() + " 下线了.");
     }
 }
