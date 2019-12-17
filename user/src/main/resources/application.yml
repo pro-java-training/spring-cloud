@@ -37,6 +37,12 @@ spring:
       pool:
         max-active: 4
 
+  data:
+    mongodb:
+      database: log
+      host: localhost
+      port: 27017
+
   servlet:
     multipart:
       max-request-size: 10MB

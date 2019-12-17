@@ -1,5 +1,6 @@
 package com.codve.user.service.impl;
 
+import com.codve.user.convert.LogConvert;
 import com.codve.user.exception.EX;
 import com.codve.user.filter.TokenProvider;
 import com.codve.user.model.auth.AuthUser;
@@ -9,6 +10,7 @@ import com.codve.user.model.data.object.UserDO;
 import com.codve.user.model.query.UserLoginQuery;
 import com.codve.user.properties.TokenProperties;
 import com.codve.user.service.AuthService;
+import com.codve.user.service.LogService;
 import com.codve.user.service.TokenService;
 import com.codve.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,9 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private LogService logService;
+
     @Override
     public String passwordAuth(HttpServletRequest request, UserLoginQuery query) {
         UserDO userDO = userService.findByName(query.getName());
@@ -60,14 +65,15 @@ public class AuthServiceImpl implements AuthService {
 
         Long currentTime = System.currentTimeMillis();
 
+        TokenDO tokenDO = new TokenDO();
         if (tokenList.size() > 0) {
-            TokenDO tokenDO = tokenList.get(0);
+            tokenDO = tokenList.get(0);
             tokenDO.setToken(token);
             tokenDO.setCreateTime(currentTime);
             tokenDO.setExpireTime(currentTime + tokenProperties.getExpire().toMillis());
             tokenService.update(tokenDO);
         } else {
-            TokenDO tokenDO = new TokenDO();
+            tokenDO = new TokenDO();
             tokenDO.setUserId(userDO.getId());
             tokenDO.setDeviceType(1);
             tokenDO.setDeviceCode("201506");
@@ -78,6 +84,7 @@ public class AuthServiceImpl implements AuthService {
             tokenDO.setExpireTime(System.currentTimeMillis() + tokenProperties.getExpire().toMillis());
             tokenService.save(tokenDO);
         }
+        logService.save(LogConvert.convert(tokenDO));
         return token;
     }
 

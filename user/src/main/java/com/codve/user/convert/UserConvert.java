@@ -16,7 +16,6 @@ import java.util.List;
  */
 public class UserConvert {
 
-
     public static UserDO convert(UserCreateQuery user) {
         UserDO userDO = new UserDO();
         BeanUtils.copyProperties(user, userDO);
