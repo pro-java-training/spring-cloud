@@ -43,12 +43,14 @@ spring:
       host: localhost
       port: 27017
 
-  servlet:
-    multipart:
-      max-request-size: 10MB
-      max-file-size: 10MB
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: admin
+    password: admin
+
   main:
-    lazy-initialization: true
+    lazy-initialization: false
 
   application:
     name: user-server
@@ -63,11 +65,11 @@ token:
   expire: 300s
   secret: 123456
 
-eureka:
-  client:
-    service-url:
-      default-zone: http://localhost:8761/eureka
-  instance:
-    prefer-ip-address: true
-    metadata-map:
-      profile: "用户服务中心"
+#eureka:
+#  client:
+#    service-url:
+#      default-zone: http://localhost:8761/eureka
+#  instance:
+#    prefer-ip-address: true
+#    metadata-map:
+#      profile: "用户服务中心"
