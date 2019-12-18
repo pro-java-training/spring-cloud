@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.Random;
@@ -18,7 +17,6 @@ import java.util.Random;
  * @date 2019/12/17 18:20
  */
 @Slf4j
-@Component
 public class SendMessageService {
 
     private ObjectMapper mapper = new ObjectMapper();
@@ -30,8 +28,8 @@ public class SendMessageService {
     @Autowired
     private Sender sender;
 
-    @Scheduled(cron = "0/1 * * * * *")
-    @Async
+//    @Scheduled(cron = "0/1 * * * * *")
+//    @Async
     public void send() throws JsonProcessingException {
         Random random = new Random();
         UserDO userDO = new UserDO();

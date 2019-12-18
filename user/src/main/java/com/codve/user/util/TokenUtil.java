@@ -18,7 +18,6 @@ public class TokenUtil {
     public static TokenDO getToken(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
         TokenDO tokenDO = new TokenDO();
-        log.warn(token);
         if (StringUtils.hasText(token) && token.startsWith(PREFIX)) {
             token = token.substring(PREFIX.length());
             tokenDO.setToken(token);
